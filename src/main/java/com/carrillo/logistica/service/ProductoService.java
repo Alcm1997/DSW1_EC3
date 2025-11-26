@@ -1,12 +1,12 @@
 package com.carrillo.logistica.service;
 
+import com.carrillo.logistica.exception.ResourceNotFoundException;
 import com.carrillo.logistica.model.Producto;
 import com.carrillo.logistica.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductoService {
@@ -30,14 +30,14 @@ public class ProductoService {
         return productoRepository.save(producto);
     }
 
-    public Optional<Producto> buscarPorId(Long id) {
-        return productoRepository.findById(id);
+    public Producto buscarPorId(Long id) {
+        return productoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con ID: " + id));
     }
 
     public void eliminarLogico(Long id) {
-        productoRepository.findById(id).ifPresent(producto -> {
-            producto.setEstado("I");
-            productoRepository.save(producto);
-        });
+        Producto producto = buscarPorId(id);
+        producto.setEstado("I");
+        productoRepository.save(producto);
     }
 }

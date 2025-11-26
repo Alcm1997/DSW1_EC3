@@ -24,11 +24,36 @@ public class GlobalExceptionHandler {
             errorMessage += ": " + ex.getBindingResult().getFieldError().getDefaultMessage();
         }
         model.addAttribute("error", errorMessage);
+        model.addAttribute("status", 400);
         return "error/400";
     }
 
     /**
-     * Maneja errores de integridad de datos (RUC duplicado, etc.)
+     * Maneja errores 404 - Recurso no encontrado
+     * Se lanza cuando se busca un ID que no existe en la base de datos
+     */
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleResourceNotFoundException(ResourceNotFoundException ex, Model model) {
+        model.addAttribute("error", ex.getMessage());
+        model.addAttribute("status", 404);
+        return "error/404";
+    }
+
+    /**
+     * Maneja errores 409 - Conflicto (duplicados)
+     * Se lanza cuando se intenta crear un recurso que ya existe (ej: RUC duplicado)
+     */
+    @ExceptionHandler(DuplicateResourceException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public String handleDuplicateResourceException(DuplicateResourceException ex, Model model) {
+        model.addAttribute("error", ex.getMessage());
+        model.addAttribute("status", 409);
+        return "error/409";
+    }
+
+    /**
+     * Maneja errores de integridad de datos
      */
     @ExceptionHandler(DataIntegrityViolationException.class)
     public String handleDataIntegrityViolationException(DataIntegrityViolationException ex,
@@ -39,12 +64,14 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Maneja errores 404 - No existe (ID no encontrado, página no existe)
+     * Maneja errores 404 - Página no encontrada
      */
     @ExceptionHandler({ org.springframework.web.servlet.resource.NoResourceFoundException.class,
             org.springframework.web.servlet.NoHandlerFoundException.class })
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleNotFound() {
+    public String handleNotFound(Model model) {
+        model.addAttribute("error", "Página no encontrada");
+        model.addAttribute("status", 404);
         return "error/404";
     }
 
@@ -57,6 +84,7 @@ public class GlobalExceptionHandler {
     public String handleGlobalException(Exception ex, Model model) {
         model.addAttribute("error",
                 "Ocurrió un error inesperado: " + ex.getClass().getSimpleName() + " - " + ex.getMessage());
+        model.addAttribute("status", 500);
         return "error/error";
     }
 }

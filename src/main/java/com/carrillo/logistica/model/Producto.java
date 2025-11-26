@@ -18,7 +18,7 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idProducto;
 
-    @NotBlank(message = "El nombre es obligatorio")
+    @NotBlank(message = "El nombre del producto es obligatorio")
     @Column(nullable = false, length = 120)
     private String nombre;
 
@@ -35,7 +35,7 @@ public class Producto {
     @Column(nullable = false, length = 1)
     private String estado = "A"; // A: Activo, I: Inactivo
 
-    @NotNull(message = "El proveedor es obligatorio")
+    @NotNull(message = "Debe seleccionar un proveedor")
     @ManyToOne
     @JoinColumn(name = "id_proveedor", nullable = false)
     private Proveedor proveedor;

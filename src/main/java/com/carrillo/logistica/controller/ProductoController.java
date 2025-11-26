@@ -1,5 +1,6 @@
 package com.carrillo.logistica.controller;
 
+import com.carrillo.logistica.dto.ProductoDTO;
 import com.carrillo.logistica.model.Producto;
 import com.carrillo.logistica.model.Proveedor;
 import com.carrillo.logistica.service.ProductoService;
@@ -30,20 +31,19 @@ public class ProductoController {
 
     @GetMapping("/nuevo")
     public String formularioNuevo(Model model) {
-        model.addAttribute("producto", new com.carrillo.logistica.dto.ProductoDTO());
+        model.addAttribute("producto", new ProductoDTO());
         model.addAttribute("proveedores", proveedorService.listarActivos());
         return "productos/form";
     }
 
-    @PostMapping
-    public String guardar(@Valid @ModelAttribute("producto") com.carrillo.logistica.dto.ProductoDTO productoDTO,
+    @PostMapping("/guardar")
+    public String guardar(@Valid @ModelAttribute("producto") ProductoDTO productoDTO,
             BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             model.addAttribute("proveedores", proveedorService.listarActivos());
             return "productos/form";
         }
-        Proveedor proveedor = proveedorService.buscarPorId(productoDTO.getIdProveedor())
-                .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
+        Proveedor proveedor = proveedorService.buscarPorId(productoDTO.getIdProveedor());
         Producto producto = com.carrillo.logistica.mapper.ProductoMapper.toEntity(productoDTO, proveedor);
         productoService.guardar(producto);
         redirectAttributes.addFlashAttribute("success", "Producto guardado correctamente");
@@ -52,11 +52,10 @@ public class ProductoController {
 
     @GetMapping("/editar/{id}")
     public String formularioEditar(@PathVariable Long id, Model model) {
-        return productoService.buscarPorId(id).map(producto -> {
-            model.addAttribute("producto", com.carrillo.logistica.mapper.ProductoMapper.toDTO(producto));
-            model.addAttribute("proveedores", proveedorService.listarActivos());
-            return "productos/form";
-        }).orElse("redirect:/productos");
+        Producto producto = productoService.buscarPorId(id);
+        model.addAttribute("producto", com.carrillo.logistica.mapper.ProductoMapper.toDTO(producto));
+        model.addAttribute("proveedores", proveedorService.listarActivos());
+        return "productos/form";
     }
 
     @GetMapping("/eliminar/{id}")

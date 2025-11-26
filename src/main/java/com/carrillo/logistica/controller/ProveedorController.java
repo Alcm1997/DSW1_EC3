@@ -64,10 +64,9 @@ public class ProveedorController {
 
     @GetMapping("/editar/{id}")
     public String formularioEditar(@PathVariable Long id, Model model) {
-        return proveedorService.buscarPorId(id).map(proveedor -> {
-            model.addAttribute("proveedor", com.carrillo.logistica.mapper.ProveedorMapper.toDTO(proveedor));
-            return "proveedores/form";
-        }).orElse("redirect:/proveedores");
+        Proveedor proveedor = proveedorService.buscarPorId(id);
+        model.addAttribute("proveedor", com.carrillo.logistica.mapper.ProveedorMapper.toDTO(proveedor));
+        return "proveedores/form";
     }
 
     @GetMapping("/eliminar/{id}")
@@ -79,15 +78,14 @@ public class ProveedorController {
 
     @GetMapping("/{id}")
     public String verDetalle(@PathVariable Long id, @RequestParam(required = false) String estado, Model model) {
-        return proveedorService.buscarPorId(id).map(proveedor -> {
-            model.addAttribute("proveedor", proveedor);
-            if (estado != null && !estado.isEmpty()) {
-                model.addAttribute("productos", productoService.listarPorProveedorYEstado(id, estado));
-            } else {
-                model.addAttribute("productos", productoService.listarPorProveedor(id));
-            }
-            model.addAttribute("estadoSeleccionado", estado);
-            return "proveedores/detalle";
-        }).orElse("redirect:/proveedores");
+        Proveedor proveedor = proveedorService.buscarPorId(id);
+        model.addAttribute("proveedor", proveedor);
+        if (estado != null && !estado.isEmpty()) {
+            model.addAttribute("productos", productoService.listarPorProveedorYEstado(id, estado));
+        } else {
+            model.addAttribute("productos", productoService.listarPorProveedor(id));
+        }
+        model.addAttribute("estadoSeleccionado", estado);
+        return "proveedores/detalle";
     }
 }
