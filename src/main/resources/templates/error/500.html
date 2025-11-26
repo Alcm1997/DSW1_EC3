@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+
+<head>
+    <title>Error Interno (500)</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="d-flex align-items-center justify-content-center vh-50">
+            <div class="text-center">
+                <h1 class="display-1 fw-bold">500</h1>
+                <p class="fs-3"> <span class="text-danger">Error!</span> Error interno del servidor.</p>
+                <p class="lead">
+                    Algo salió mal en nuestro lado. Por favor, inténtalo de nuevo más tarde.
+                </p>
+                <a href="/" class="btn btn-primary">Ir al Inicio</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

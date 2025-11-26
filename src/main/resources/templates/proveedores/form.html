@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+
+<head>
+    <title>Formulario de Proveedor</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0"
+                            th:text="${proveedor.idProveedor != null ? 'Editar Proveedor' : 'Nuevo Proveedor'}"></h4>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/proveedores}" th:object="${proveedor}" method="post">
+                            <input type="hidden" th:field="*{idProveedor}" />
+
+                            <div class="mb-3">
+                                <label for="ruc" class="form-label">RUC</label>
+                                <input type="text" class="form-control" id="ruc" th:field="*{ruc}"
+                                    th:classappend="${#fields.hasErrors('ruc')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:errors="*{ruc}"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="razonSocial" class="form-label">Razón Social</label>
+                                <input type="text" class="form-control" id="razonSocial" th:field="*{razonSocial}"
+                                    th:classappend="${#fields.hasErrors('razonSocial')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:errors="*{razonSocial}"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="contacto" class="form-label">Contacto</label>
+                                <input type="text" class="form-control" id="contacto" th:field="*{contacto}">
+                            </div>
+
+                            <div class="mb-3" th:if="${proveedor.idProveedor != null}">
+                                <label for="estado" class="form-label">Estado</label>
+                                <select class="form-select" id="estado" th:field="*{estado}">
+                                    <option value="A">Activo</option>
+                                    <option value="I">Inactivo</option>
+                                </select>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                <a th:href="@{/proveedores}" class="btn btn-secondary">Cancelar</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
