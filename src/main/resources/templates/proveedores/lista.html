@@ -72,6 +72,23 @@
                         <td>
                             <a th:href="@{/proveedores/editar/{id}(id=${p.idProveedor})}"
                                 class="btn btn-sm btn-warning">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a th:href="@{/proveedores/{id}(id=${p.idProveedor})}"
+                                class="btn btn-sm btn-info text-white">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a th:href="@{/proveedores/eliminar/{id}(id=${p.idProveedor})}"
+                                class="btn btn-sm btn-danger"
+                                onclick="return confirm('¿Estás seguro de inactivar este proveedor?')">
+                                <i class="bi bi-exclamation-triangle"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 
 </html>
